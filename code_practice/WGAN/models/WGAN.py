@@ -252,11 +252,13 @@ class WGAN():
         
         noise = np.random.normal(0, 1, (batch_size, self.z_dim))
         gen_imgs = self.generator.predict(noise)
-
+        # check
+        # cirtic - real / fake 에서의 loss 각각 구함
         d_loss_real =   self.critic.train_on_batch(true_imgs, valid)
         d_loss_fake =   self.critic.train_on_batch(gen_imgs, fake)
         d_loss = 0.5 * (d_loss_real + d_loss_fake)
-
+        # check
+        # 립시츠 제약 : weights clipping
         for l in self.critic.layers:
             weights = l.get_weights()
             weights = [np.clip(w, -clip_threshold, clip_threshold) for w in weights]
@@ -285,7 +287,9 @@ class WGAN():
         , n_critic = 5
         , clip_threshold = 0.01
         , using_generator = False):
-
+        
+        # check
+        # generator 1번 update 할 때, critic 5번 함
         for epoch in range(self.epoch, self.epoch + epochs):
 
             for _ in range(n_critic):
